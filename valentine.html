@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veux-tu être ma Valentine ?</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+        
+        body {
+            font-family: 'Pacifico', cursive;
+            text-align: center;
+            background-color: #ffe6e6;
+            padding: 50px;
+            position: relative;
+            transition: background 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .background-elements, .final-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .floating-heart, .floating-text {
+            position: absolute;
+            font-size: 24px;
+            color: red;
+            animation: floatUp 4s linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(1); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+        .game-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            overflow: hidden;
+        }
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            cursor: pointer;
+            user-select: none;
+            touch-action: manipulation;
+        }
+        .counter {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .instructions {
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .card {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.5s ease;
+            z-index: 2;
+        }
+        h1 {
+            color: #ff4d4d;
+            font-size: 36px;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        button {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        #message {
+            display: none;
+            font-size: 40px;
+            font-weight: bold;
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 2;
+            animation: sparkle 1.5s infinite alternate;
+        }
+        @keyframes sparkle {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.1); opacity: 0.8; }
+        }
+    </style>
+    <script>
+        let score = 0;
+        function spawnHeart() {
+            let heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "❤️";
+            heart.style.top = Math.random() * 80 + "vh";
+            heart.style.left = Math.random() * 80 + "vw";
+            heart.onclick = function() {
+                score++;
+                document.getElementById("counter").innerText = `Cœurs attrapés: ${score} / 5`;
+                heart.remove();
+                if (score >= 5) {
+                    document.querySelector(".card").style.display = "block";
+                    document.querySelector(".game-container").style.display = "none";
+                }
+            };
+            document.querySelector(".game-container").appendChild(heart);
+        }
+        window.onload = function() {
+            for (let i = 0; i < 5; i++) {
+                spawnHeart();
+            }
+        };
+        function createFloatingElements(container) {
+            for (let i = 0; i < 15; i++) {
+                let heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (3 + Math.random() * 2) + 's';
+                container.appendChild(heart);
+
+                let text = document.createElement('div');
+                text.classList.add('floating-text');
+                text.innerHTML = 'Je t’aime ❤️';
+                text.style.left = Math.random() * 100 + 'vw';
+                text.style.animationDuration = (3 + Math.random() * 2) + 's';
+                container.appendChild(text);
+            }
+        }
+        function changeScreen() {
+            document.body.innerHTML = '<div class="final-background"></div>' +
+                '<div> Merci beaucoup mon amour je t’aime fort❤️ !</div>';
+            createFloatingElements(document.querySelector('.final-background'));
+        }
+    </script>
+</head>
+<body>
+    <div class="background-elements"></div>
+    <div class="game-container">
+        <div id="counter" class="counter">Cœurs attrapés: 0 / 5</div>
+        <div class="instructions">Clique sur 5 cœurs pour débloquer la surprise !</div>
+    </div>
+    <div class="card">
+        <h1>Veux-tu être ma Valentine ? </h1>
+        <div class="buttons">
+            <button onclick="changeScreen()">Oui</button>
+            <button onclick="changeScreen()">Toujours Oui</button>
+        </div>
+    </div>
+</body>
+</html>
